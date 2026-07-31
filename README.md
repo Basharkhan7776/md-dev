@@ -63,13 +63,36 @@ Theme follows the OS by default (`system`). Override with `--theme light` or `--
 
 ## Publish to npm
 
+### GitHub Actions (recommended)
+
+1. Create an npm **granular** token with **publish** + **Bypass 2FA**  
+   (or a classic **Automation** token) — see [docs/PUBLISH.md](docs/PUBLISH.md)
+2. GitHub repo → **Settings** → **Secrets and variables** → **Actions**  
+   → secret name: **`NPM_TOKEN`**
+3. Release:
+
 ```bash
-bun run build
-npm login
-npm publish --access public
+# bump version in package.json, then:
+git tag v1.0.1
+git push origin main --tags
+# or create a GitHub Release
 ```
 
-`prepublishOnly` runs the full build (web assets + CLI bundle). Published package ships `bin/mdparse` + `dist/` (no runtime npm deps; web is prebuilt).
+Workflows:
+
+| Workflow | Trigger |
+|----------|---------|
+| [CI](.github/workflows/ci.yml) | push / PR — build + smoke test |
+| [Publish](.github/workflows/publish.yml) | tag `v*`, GitHub Release, or manual |
+
+### Local publish
+
+```bash
+bun run build
+npm publish --access public --otp=XXXXXX   # if 2FA is on
+```
+
+Published package ships `bin/mdparse` + `dist/` (prebuilt; needs Bun on the machine to run).
 
 ## Development
 

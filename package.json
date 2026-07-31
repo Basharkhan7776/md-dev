@@ -33,16 +33,16 @@
     "preview",
     "gfm"
   ],
-  "author": "",
+  "author": "basharkhan7776",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/example/mdparse.git"
+    "url": "git+https://github.com/basharkhan7776/mdparse.git"
   },
   "bugs": {
-    "url": "https://github.com/example/mdparse/issues"
+    "url": "https://github.com/basharkhan7776/mdparse/issues"
   },
-  "homepage": "https://github.com/example/mdparse#readme",
+  "homepage": "https://github.com/basharkhan7776/mdparse#readme",
   "engines": {
     "bun": ">=1.1.0"
   },
