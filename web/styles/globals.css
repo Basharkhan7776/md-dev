@@ -1,0 +1,424 @@
+@import "tailwindcss";
+
+/* Geist fonts (copied from geist package → public/fonts) */
+@font-face {
+  font-family: "Geist";
+  src: url("/fonts/Geist-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/fonts/GeistMono-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Vercel / Geist inspired tokens (shadcn-compatible) */
+@theme {
+  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 9%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 9%;
+  --primary: 0 0% 9%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 0 0% 96%;
+  --secondary-foreground: 0 0% 9%;
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 45%;
+  --accent: 0 0% 96%;
+  --accent-foreground: 0 0% 9%;
+  --destructive: 0 84% 60%;
+  --border: 0 0% 90%;
+  --input: 0 0% 90%;
+  --ring: 0 0% 9%;
+  --radius: 0.5rem;
+  --link: 212 100% 45%;
+  --code-bg: 0 0% 97%;
+}
+
+.dark {
+  --background: 0 0% 4%;
+  --foreground: 0 0% 93%;
+  --card: 0 0% 6%;
+  --card-foreground: 0 0% 93%;
+  --popover: 0 0% 6%;
+  --popover-foreground: 0 0% 93%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 0 0% 9%;
+  --secondary: 0 0% 12%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 0 0% 12%;
+  --muted-foreground: 0 0% 64%;
+  --accent: 0 0% 12%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62% 50%;
+  --border: 0 0% 14%;
+  --input: 0 0% 14%;
+  --ring: 0 0% 83%;
+  --link: 212 100% 65%;
+  --code-bg: 0 0% 8%;
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-sans);
+  font-feature-settings: "rlig" 1, "calt" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Prose / markdown content — Vercel docs feel */
+.md-prose {
+  font-size: 15px;
+  line-height: 1.75;
+  color: hsl(var(--foreground));
+}
+
+.md-prose > :first-child {
+  margin-top: 0;
+}
+
+.md-prose h1,
+.md-prose h2,
+.md-prose h3,
+.md-prose h4,
+.md-prose h5,
+.md-prose h6 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  scroll-margin-top: 5rem;
+  line-height: 1.25;
+}
+
+.md-prose h1 {
+  font-size: 2rem;
+  margin: 0 0 1.25rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.md-prose h2 {
+  font-size: 1.5rem;
+  margin: 2.25rem 0 0.85rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.md-prose h3 {
+  font-size: 1.2rem;
+  margin: 1.75rem 0 0.65rem;
+}
+
+.md-prose h4 {
+  font-size: 1.05rem;
+  margin: 1.5rem 0 0.5rem;
+}
+
+.md-prose p {
+  margin: 0.9rem 0;
+}
+
+.md-prose a {
+  color: hsl(var(--link));
+  text-decoration: none;
+  text-underline-offset: 3px;
+}
+
+.md-prose a:hover {
+  text-decoration: underline;
+}
+
+.md-prose strong {
+  font-weight: 600;
+}
+
+.md-prose em {
+  font-style: italic;
+}
+
+.md-prose del {
+  opacity: 0.7;
+}
+
+.md-prose blockquote {
+  margin: 1.25rem 0;
+  padding: 0.25rem 0 0.25rem 1rem;
+  border-left: 3px solid hsl(var(--border));
+  color: hsl(var(--muted-foreground));
+}
+
+.md-prose blockquote p {
+  margin: 0.35rem 0;
+}
+
+.md-prose ul,
+.md-prose ol {
+  margin: 0.9rem 0;
+  padding-left: 1.5rem;
+}
+
+.md-prose li {
+  margin: 0.3rem 0;
+}
+
+.md-prose li > ul,
+.md-prose li > ol {
+  margin: 0.2rem 0;
+}
+
+.md-prose hr {
+  border: none;
+  border-top: 1px solid hsl(var(--border));
+  margin: 2rem 0;
+}
+
+.md-prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--border));
+}
+
+.md-prose :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: hsl(var(--code-bg));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.3rem;
+  padding: 0.12em 0.35em;
+}
+
+/* Tables — real table layout (never display:block on <table>) */
+.md-table-wrap {
+  margin: 1.5rem 0;
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.5rem;
+  background: hsl(var(--card));
+}
+
+.md-prose .md-table-wrap table,
+.md-prose table {
+  display: table;
+  width: 100%;
+  min-width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  table-layout: auto;
+}
+
+.md-prose thead {
+  background: hsl(var(--muted));
+}
+
+.md-prose th {
+  font-weight: 500;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  color: hsl(var(--muted-foreground));
+  border-bottom: 1px solid hsl(var(--border));
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.md-prose td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid hsl(var(--border));
+  vertical-align: top;
+  color: hsl(var(--foreground));
+  word-break: break-word;
+}
+
+.md-prose tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.md-prose tbody tr:hover td {
+  background: hsl(var(--muted) / 0.4);
+}
+
+/* First column: feature labels */
+.md-prose td:first-child,
+.md-prose th:first-child {
+  white-space: nowrap;
+  width: 1%;
+  font-weight: 500;
+  color: hsl(var(--foreground));
+  padding-right: 1.5rem;
+}
+
+.md-prose td:first-child strong,
+.md-prose td:first-child b {
+  font-weight: 500;
+}
+
+/* Inline code inside table cells */
+.md-prose td code {
+  white-space: nowrap;
+}
+
+/* Task lists */
+.md-prose input[type="checkbox"] {
+  margin-right: 0.5rem;
+  accent-color: hsl(var(--foreground));
+}
+
+.md-prose li:has(> input[type="checkbox"]) {
+  list-style: none;
+  margin-left: -1.25rem;
+}
+
+/* Heading anchor */
+.md-prose .heading-anchor {
+  opacity: 0;
+  margin-left: 0.35rem;
+  color: hsl(var(--muted-foreground));
+  text-decoration: none;
+  font-weight: 400;
+}
+
+.md-prose h1:hover .heading-anchor,
+.md-prose h2:hover .heading-anchor,
+.md-prose h3:hover .heading-anchor,
+.md-prose h4:hover .heading-anchor {
+  opacity: 1;
+}
+
+/* Code blocks — Vercel / Geist style */
+.shiki-wrap {
+  position: relative;
+  margin: 1.25rem 0;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: #fafafa;
+}
+
+.dark .shiki-wrap {
+  background: #0a0a0a;
+  border-color: #262626;
+}
+
+.shiki-wrap .shiki-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.45rem 0.75rem;
+  border-bottom: 1px solid hsl(var(--border));
+  background: hsl(var(--muted) / 0.55);
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+  color: hsl(var(--muted-foreground));
+  font-family: var(--font-mono);
+}
+
+.dark .shiki-wrap .shiki-header {
+  border-bottom-color: #262626;
+  background: #111111;
+}
+
+.shiki-wrap pre {
+  margin: 0 !important;
+  padding: 1rem 1.15rem !important;
+  overflow-x: auto;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  background: transparent !important;
+  tab-size: 2;
+}
+
+.shiki-wrap code {
+  font-family: var(--font-mono);
+  font-size: inherit;
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  counter-reset: none;
+}
+
+/* Shiki token spans keep their theme colors; ensure no override */
+.shiki-wrap .shiki span {
+  font-style: inherit;
+}
+
+/* Mermaid */
+.mermaid-wrap {
+  margin: 1.25rem 0;
+  padding: 1.25rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  background: hsl(var(--card));
+  overflow-x: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.mermaid-wrap svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Scrollbar subtle */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.4);
+}

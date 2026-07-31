@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Global entrypoint — requires Bun (https://bun.sh)
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+CLI="$ROOT/dist/cli.js"
+SRC="$ROOT/src/cli.ts"
+
+if ! command -v bun >/dev/null 2>&1; then
+  echo "mdparse requires Bun. Install: https://bun.sh" >&2
+  echo "  curl -fsSL https://bun.sh/install | bash" >&2
+  exit 1
+fi
+
+if [[ -f "$CLI" ]]; then
+  exec bun "$CLI" "$@"
+fi
+
+if [[ -f "$SRC" ]]; then
+  # Dev / linked checkout before build
+  exec bun "$SRC" "$@"
+fi
+
+echo "mdparse: missing dist/cli.js. Run: bun run build" >&2
+exit 1
