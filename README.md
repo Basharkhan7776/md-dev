@@ -61,38 +61,43 @@ Theme follows the OS by default (`system`). Override with `--theme light` or `--
 | Images | Relative paths via `/media/*` |
 | Live reload | File watch + SSE |
 
-## Publish to npm
+## CI/CD (GitHub Actions)
 
-### GitHub Actions (recommended)
+Same idea as [create-churn](https://github.com/Basharkhan7776/Churn): **every push runs CI**; **main also publishes to npm**.
 
-1. Create an npm **granular** token with **publish** + **Bypass 2FA**  
-   (or a classic **Automation** token) — see [docs/PUBLISH.md](docs/PUBLISH.md)
-2. GitHub repo → **Settings** → **Secrets and variables** → **Actions**  
-   → secret name: **`NPM_TOKEN`**
-3. Release:
+Workflow: [`.github/workflows/publish.yml`](.github/workflows/publish.yml)
+
+| Event | What runs |
+|-------|-----------|
+| Push / PR | Install → build → smoke test |
+| Push to `main` | Same CI, then **npm publish** (if version is new) |
+
+### Setup once
+
+1. Create an npm token (**Automation** or granular with **Bypass 2FA**) — [docs/PUBLISH.md](docs/PUBLISH.md)
+2. Repo → **Settings** → **Secrets** → **Actions** → name: **`NPM_TOKEN`**
+
+### Release
 
 ```bash
-# bump version in package.json, then:
-git tag v1.0.1
-git push origin main --tags
-# or create a GitHub Release
+# 1. Bump version in package.json
+# 2. Push to main
+git add package.json
+git commit -m "chore: release 1.0.1"
+git push origin main
+# → CI runs → npm publish mdparse@1.0.1
 ```
 
-Workflows:
-
-| Workflow | Trigger |
-|----------|---------|
-| [CI](.github/workflows/ci.yml) | push / PR — build + smoke test |
-| [Publish](.github/workflows/publish.yml) | tag `v*`, GitHub Release, or manual |
+If the version is already on npm, publish is skipped (CI still passes).
 
 ### Local publish
 
 ```bash
 bun run build
-npm publish --access public --otp=XXXXXX   # if 2FA is on
+npm publish --access public --otp=XXXXXX
 ```
 
-Published package ships `bin/mdparse` + `dist/` (prebuilt; needs Bun on the machine to run).
+Package ships `bin/mdparse` + `dist/` (needs Bun on the machine to run).
 
 ## Development
 
