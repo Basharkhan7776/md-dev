@@ -6,7 +6,7 @@ import { openBrowser } from "./open";
 import { resolveMarkdownPath } from "./paths";
 import { findWebRoot, startServer } from "./server";
 
-const VERSION = "1.0.2";
+const VERSION = "1.0.3";
 
 /** Default port. Avoid 6000 — Chrome/Edge block it (ERR_UNSAFE_PORT / X11). */
 const DEFAULT_PORT = 5000;
