@@ -36,13 +36,13 @@ jobs:
         run: |
           test -f dist/cli.js
           test -f dist/web/index.html
-          test -f bin/mdparse
+          test -f bin/md-dev
 
       - name: CLI smoke test
         run: |
-          ./bin/mdparse --version
-          ./bin/mdparse --help
-          ./bin/mdparse fixtures/sample.md --no-open --no-watch &
+          ./bin/md-dev --version
+          ./bin/md-dev --help
+          ./bin/md-dev fixtures/sample.md --no-open --no-watch &
           PID=$!
           sleep 1
           curl -sf http://127.0.0.1:5000/ >/dev/null
@@ -60,25 +60,37 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
           registry-url: "https://registry.npmjs.org"
-          # setup-node writes .npmrc that uses NODE_AUTH_TOKEN
+
+      - name: Check if version is already published
+        id: check_version
+        run: |
+          NAME=$(node -p "require('./package.json').name")
+          VERSION=$(node -p "require('./package.json').version")
+          echo "Package: $NAME@$VERSION"
+
+          if npm view "${NAME}@${VERSION}" version 2>/dev/null; then
+            echo "Version ${VERSION} already on npm — skipping publish."
+            echo "published=true" >> $GITHUB_OUTPUT
+          else
+            echo "published=false" >> $GITHUB_OUTPUT
+          fi
+
+      - uses: oven-sh/setup-bun@v2
+        if: steps.check_version.outputs.published != 'true'
+        with:
+          bun-version: latest
 
       - name: Install dependencies
+        if: steps.check_version.outputs.published != 'true'
         run: bun install
 
-      - name: Build package
-        run: bun run build
-
       - name: Publish to npm
+        if: steps.check_version.outputs.published != 'true'
         env:
-          # Must be Automation token OR granular token with "Bypass 2FA"
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           set -euo pipefail
@@ -90,14 +102,8 @@ jobs:
 
           NAME=$(node -p "require('./package.json').name")
           VERSION=$(node -p "require('./package.json').version")
-          echo "Package: $NAME@$VERSION"
 
-          if npm view "${NAME}@${VERSION}" version 2>/dev/null; then
-            echo "Version ${VERSION} already on npm — skip publish."
-            exit 0
-          fi
-
-          # Publish (setup-node already configured registry + auth via NODE_AUTH_TOKEN)
+          # Publish (npm publish runs prepublishOnly -> bun run build automatically)
           set +e
           OUT=$(npm publish --access public --provenance 2>&1)
           STATUS=$?
@@ -126,7 +132,7 @@ jobs:
               echo "  Then: GitHub repo → Settings → Secrets → Actions → NPM_TOKEN → update value"
               echo "  Re-run this workflow (or push again)."
               echo ""
-            fi
+              fi
             exit $STATUS
           fi
 

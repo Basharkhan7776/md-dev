@@ -32,11 +32,11 @@ Open: https://www.npmjs.com/settings/~/tokens
 #### Option B — Granular Access Token
 
 1. **Generate New Token** → **Granular Access Token**
-2. Name: `github-actions-mdparse`
+2. Name: `github-actions-md-dev`
 3. Expiration: your choice
 4. **Permissions**: Read and write  
 5. **Packages and scopes**:  
-   - Allow publish for your user / all packages (needed for first publish of `mdparse`)  
+   - Allow publish for your user / all packages (needed for first publish of `md-dev`)  
 6. **Bypass two-factor authentication**: **ON** ✅  
 7. Generate and copy
 
@@ -71,7 +71,7 @@ Bump `version` in `package.json` before each release.
 - [ ] Secret name is exactly `NPM_TOKEN`
 - [ ] You **updated** the secret after creating the new token (old token still fails)
 - [ ] Token was not revoked / expired
-- [ ] You are logged into the same npm user that will own `mdparse` (`basharkhan7776`)
+- [ ] You are logged into the same npm user that will own `md-dev` (`basharkhan7776`)
 
 ---
 
