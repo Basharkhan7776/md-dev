@@ -68,19 +68,30 @@ export function startServer(opts: ServerOptions) {
 
   if (opts.watch) {
     const dir = dirname(opts.file);
+    const targetBase = basename(opts.file);
     try {
-      watcher = watch(dir, { recursive: true }, (_event, filename) => {
+      // Watch non-recursively in the file's directory to avoid scanning node_modules / .git
+      watcher = watch(dir, (_event, filename) => {
         if (!filename) {
           scheduleReload("change");
           return;
         }
-        // Reload on markdown changes or any media under the same dir
-        scheduleReload(String(filename));
+        const str = String(filename);
+        // Only trigger reload for the target file or relevant markdown/image files
+        if (str === targetBase || str.endsWith(".md") || /\.(png|jpe?g|gif|svg|webp)$/i.test(str)) {
+          scheduleReload(str);
+        }
+      });
+      watcher.on("error", () => {
+        /* Ignore watcher errors (e.g. temporary file unlinks) */
       });
     } catch {
-      // Fallback: watch the file only
+      // Fallback: watch the target file directly
       try {
         watcher = watch(opts.file, () => scheduleReload("file"));
+        watcher.on("error", () => {
+          /* Ignore watcher errors */
+        });
       } catch (err) {
         console.warn("File watching unavailable:", err);
       }
