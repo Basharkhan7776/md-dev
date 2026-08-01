@@ -38,7 +38,7 @@ try {
 }
 
 // bin wrapper executable
-const bin = resolve(root, "bin/mdparse");
+const bin = resolve(root, "bin/md-dev");
 if (existsSync(bin)) {
   try {
     chmodSync(bin, 0o755);

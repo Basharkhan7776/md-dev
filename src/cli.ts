@@ -6,7 +6,7 @@ import { openBrowser } from "./open";
 import { resolveMarkdownPath } from "./paths";
 import { findWebRoot, startServer } from "./server";
 
-const VERSION = "0.1.0";
+const VERSION = "1.0.2";
 
 /** Default port. Avoid 6000 — Chrome/Edge block it (ERR_UNSAFE_PORT / X11). */
 const DEFAULT_PORT = 5000;
@@ -22,10 +22,10 @@ const CHROME_UNSAFE_PORTS = new Set([
 ]);
 
 const HELP = `
-mdparse v${VERSION} — Markdown viewer (Geist theme · Mermaid)
+md-dev v${VERSION} — Markdown viewer (Geist theme · Mermaid)
 
 Usage:
-  mdparse [file] [options]
+  md-dev [file] [options]
 
 Arguments:
   file                 Markdown file to preview (default: README.md)
@@ -40,13 +40,13 @@ Options:
   -v, --version        Show version
 
 Examples:
-  mdparse README.md
-  mdparse docs/guide.md -p 5173
-  mdparse ./notes.md --theme dark --no-open
+  md-dev README.md
+  md-dev docs/guide.md -p 5173
+  md-dev ./notes.md --theme dark --no-open
 
 Install (global):
-  bun install -g mdparse
-  npm install -g mdparse   # still requires Bun on PATH
+  bun install -g md-dev
+  npm install -g md-dev   # still requires Bun on PATH
 
 Note:
   Port 6000 is blocked by Chrome/Edge (ERR_UNSAFE_PORT). Default is ${DEFAULT_PORT}.
@@ -95,7 +95,7 @@ async function main() {
     positionals = parsed.positionals;
   } catch (err) {
     console.error(String(err));
-    console.error("\nRun mdparse --help for usage.");
+    console.error("\nRun md-dev --help for usage.");
     process.exit(1);
   }
 
@@ -135,7 +135,7 @@ async function main() {
     const def = resolveDefaultFile(cwd);
     if (!def) {
       console.error("No file specified and no README.md / index.md found.");
-      console.error("Usage: mdparse <file.md>");
+      console.error("Usage: md-dev <file.md>");
       process.exit(1);
     }
     fileArg = def;
@@ -185,7 +185,7 @@ async function main() {
     const msg = err instanceof Error ? err.message : String(err);
     if (msg.includes("EADDRINUSE") || msg.includes("address already in use")) {
       console.error(
-        `Port ${port} is already in use. Try: mdparse -p ${port + 1} ${basename(file)}`,
+        `Port ${port} is already in use. Try: md-dev -p ${port + 1} ${basename(file)}`,
       );
     } else {
       console.error("Failed to start server:", msg);
@@ -196,7 +196,7 @@ async function main() {
   const { url, stop } = instance;
 
   print("");
-  print(`  mdparse · ${basename(file)}`);
+  print(`  md-dev · ${basename(file)}`);
   print(`  ${file}`);
   print("");
   print(`  ➜  Local:   ${url}`);

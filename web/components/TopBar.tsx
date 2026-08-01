@@ -35,7 +35,7 @@ export function TopBar({
           </div>
           <div className="min-w-0">
             <div className="truncate text-sm font-medium tracking-tight">
-              {fileName || "mdparse"}
+              {fileName || "md-dev"}
             </div>
             <div className="truncate font-mono text-[11px] text-muted-foreground">
               {filePath || "—"}

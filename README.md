@@ -1,4 +1,4 @@
-# mdparse
+# md-dev
 
 CLI Markdown viewer powered by **Bun**. Open a clean preview of any `.md` file in your browser with a **Vercel Geist** look, GFM tables, **syntax-colored** code (Geist palette), and Mermaid diagrams.
 
@@ -8,10 +8,10 @@ Requires [Bun](https://bun.sh) ≥ 1.1.
 
 ```bash
 # Global (recommended)
-bun install -g mdparse
+bun install -g md-dev
 
 # Or with npm (Bun must still be on PATH)
-npm install -g mdparse
+npm install -g md-dev
 ```
 
 From this repo (local link):
@@ -19,22 +19,22 @@ From this repo (local link):
 ```bash
 bun install
 bun run build
-bun link          # then: mdparse README.md
+bun link          # then: md-dev README.md
 ```
 
 ## Usage
 
 ```bash
-mdparse README.md
-mdparse docs/guide.md -p 5173
-mdparse ./notes.md --theme dark
-mdparse .                 # README.md / index.md
+md-dev README.md
+md-dev docs/guide.md -p 5173
+md-dev ./notes.md --theme dark
+md-dev .                 # README.md / index.md
 ```
 
 Opens **http://127.0.0.1:5000** by default.
 
 ```
-mdparse [file] [options]
+md-dev [file] [options]
 
   -p, --port <n>       Port (default: 5000)
   -H, --host <host>    Host (default: 127.0.0.1)
@@ -83,9 +83,9 @@ Workflow: [`.github/workflows/publish.yml`](.github/workflows/publish.yml)
 # 1. Bump version in package.json
 # 2. Push to main
 git add package.json
-git commit -m "chore: release 1.0.1"
+git commit -m "chore: release 1.0.2"
 git push origin main
-# → CI runs → npm publish mdparse@1.0.1
+# → CI runs → npm publish md-dev@1.0.2
 ```
 
 If the version is already on npm, publish is skipped (CI still passes).
@@ -97,7 +97,7 @@ bun run build
 npm publish --access public --otp=XXXXXX
 ```
 
-Package ships `bin/mdparse` + `dist/` (needs Bun on the machine to run).
+Package ships `bin/md-dev` + `dist/` (needs Bun on the machine to run).
 
 ## Development
 

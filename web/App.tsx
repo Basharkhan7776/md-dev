@@ -30,7 +30,7 @@ export function App() {
       } else {
         setData(json);
         setError(null);
-        document.title = json.name || "mdparse";
+        document.title = json.name || "md-dev";
         if (json.theme) setCliTheme(json.theme);
       }
     } catch (err) {

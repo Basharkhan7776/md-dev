@@ -1,10 +1,10 @@
 {
-  "name": "mdparse",
-  "version": "1.0.0",
+  "name": "md-dev",
+  "version": "1.0.2",
   "description": "CLI Markdown viewer — Vercel Geist theme, Mermaid, live reload on localhost",
   "type": "module",
   "bin": {
-    "mdparse": "bin/mdparse"
+    "md-dev": "bin/md-dev"
   },
   "main": "./dist/cli.js",
   "files": [
@@ -18,7 +18,7 @@
     "build": "bun run scripts/build.ts",
     "build:web": "bun run scripts/build-web.ts",
     "start": "bun run src/cli.ts",
-    "mdparse": "bun run src/cli.ts",
+    "md-dev": "bun run src/cli.ts",
     "preview": "bun run build && bun run src/cli.ts fixtures/sample.md",
     "prepublishOnly": "bun run build",
     "link:local": "bun run build && bun link"

@@ -214,7 +214,7 @@ export function startServer(opts: ServerOptions) {
 
       return new Response(
         `<!doctype html><html><body style="font-family:system-ui;padding:2rem">
-          <h1>mdparse</h1>
+          <h1>md-dev</h1>
           <p>Web assets not built. Run <code>bun run build:web</code> first.</p>
           <p>Viewing: <code>${opts.file}</code></p>
         </body></html>`,
