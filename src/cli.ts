@@ -6,7 +6,7 @@ import { openBrowser } from "./open";
 import { resolveMarkdownPath } from "./paths";
 import { findWebRoot, startServer } from "./server";
 
-const VERSION = "1.0.5";
+const VERSION = "1.0.6";
 
 /** Default port. Avoid 6000 — Chrome/Edge block it (ERR_UNSAFE_PORT / X11). */
 const DEFAULT_PORT = 5000;
@@ -40,7 +40,6 @@ Layout Options:
   --full               Full-width layout (max-w-7xl)
   --toc                Show Table of Contents sidebar
   --no-toc             Hide Table of Contents sidebar
-  --zen, --no-topbar   Zen mode: hide the top navigation header
 
 Diagram Options:
   --no-zoom            Disable click-to-zoom dialog on Mermaid diagrams
@@ -60,7 +59,7 @@ Examples:
   md-dev --light README.md
   md-dev -d fixtures/sample.md
   md-dev docs/guide.md -W --toc
-  md-dev notes.md -d -W --zen --no-open
+  md-dev notes.md -d -W --no-open
 `.trim();
 
 function resolveDefaultFile(cwd: string): string | null {
@@ -100,8 +99,6 @@ async function main() {
         full: { type: "boolean", default: false },
         toc: { type: "boolean", default: false },
         "no-toc": { type: "boolean", default: false },
-        zen: { type: "boolean", default: false },
-        "no-topbar": { type: "boolean", default: false },
         "no-zoom": { type: "boolean", default: false },
         open: { type: "boolean", short: "o", default: false },
         "no-open": { type: "boolean", default: false },
@@ -158,7 +155,6 @@ async function main() {
   }
 
   const toc = Boolean(values.toc && !values["no-toc"]);
-  const topbar = !(values.zen || values["no-topbar"]);
   const zoom = !values["no-zoom"];
   const shouldWatch = !values["no-watch"];
   const shouldOpen = !values["no-open"];
@@ -230,7 +226,6 @@ async function main() {
       theme,
       width,
       toc,
-      topbar,
       zoom,
       webRoot,
     });
@@ -254,7 +249,7 @@ async function main() {
   print("");
   print(`  ➜  Local:   ${url}`);
   print(`  ➜  Theme:   ${theme}`);
-  print(`  ➜  Layout:  ${width}${toc ? " · TOC" : ""}${!topbar ? " · Zen" : ""}`);
+  print(`  ➜  Layout:  ${width}${toc ? " · TOC" : ""}`);
   print(`  ➜  Watch:   ${shouldWatch ? "on" : "off"}`);
   print(`  ➜  Zoom:    ${zoom ? "enabled" : "disabled"}`);
   print("");

@@ -29,7 +29,7 @@ md-dev README.md
 md-dev --light README.md         # Open directly in light mode
 md-dev --dark docs/guide.md      # Open directly in dark mode
 md-dev README.md -W --toc        # Wide layout with Table of Contents
-md-dev notes.md -d -W --zen      # Dark mode, wide view, zen mode (no header)
+md-dev notes.md -d -W --no-open  # Dark mode, wide view, no browser open
 md-dev .                         # README.md / index.md
 ```
 
@@ -48,7 +48,6 @@ Layout Options:
   --full               Full-width layout (max-w-7xl)
   --toc                Show Table of Contents sidebar
   --no-toc             Hide Table of Contents sidebar
-  --zen, --no-topbar   Zen mode: hide the top navigation header
 
 Diagram Options:
   --no-zoom            Disable click-to-zoom dialog on Mermaid diagrams
@@ -72,8 +71,8 @@ Server Options:
 | --- | --- |
 | Local server | Bun.serve on port 5000 with live reload |
 | Interactive Mermaid | Click diagram to open zoomable modal with pinch, +/- zoom, and hold-drag pan |
-| Themes | System, light (`--light`/`-l`), or dark (`--dark`/`-d`) with topbar toggle |
-| Layouts | Normal, wide (`--wide`/`-W`), full-width (`--full`), and Zen (`--zen`) |
+| Themes | System, light (`--light`/`-l`), or dark (`--dark`/`-d`) |
+| Layouts | Normal, wide (`--wide`/`-W`), and full-width (`--full`) |
 | Table of Contents | Optional sticky TOC sidebar (`--toc`) with active section highlighting |
 | Geist styling | Vercel Geist typography and token colors via Shiki |
 | GFM | Tables, task lists, strikethrough, autolinked headings |

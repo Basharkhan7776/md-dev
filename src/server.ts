@@ -11,7 +11,6 @@ export type ServerOptions = {
   webRoot: string;
   width?: "normal" | "wide" | "full";
   toc?: boolean;
-  topbar?: boolean;
   zoom?: boolean;
 };
 
@@ -155,7 +154,6 @@ export function startServer(opts: ServerOptions) {
           theme: opts.theme,
           width: opts.width ?? "normal",
           toc: opts.toc ?? false,
-          topbar: opts.topbar ?? true,
           zoom: opts.zoom ?? true,
         });
       }

@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { MarkdownView } from "@/components/MarkdownView";
-import { TopBar } from "@/components/TopBar";
 import { TableOfContents } from "@/components/TableOfContents";
 import { useSSE } from "@/hooks/useSSE";
 import { useTheme, type ThemeMode } from "@/hooks/useTheme";
@@ -14,7 +13,6 @@ type ContentResponse = {
   theme: ThemeMode;
   width?: "normal" | "wide" | "full";
   toc?: boolean;
-  topbar?: boolean;
   zoom?: boolean;
   error?: string;
 };
@@ -55,14 +53,6 @@ export function App() {
     void load();
   }, true);
 
-  const cycleTheme = useCallback(() => {
-    setCliTheme((prev) => {
-      if (prev === "system") return "light";
-      if (prev === "light") return "dark";
-      return "system";
-    });
-  }, []);
-
   const widthClass =
     data?.width === "full"
       ? "max-w-7xl"
@@ -70,25 +60,13 @@ export function App() {
       ? "max-w-5xl"
       : "max-w-3xl";
 
-  const showTopBar = data?.topbar !== false;
   const showToc = Boolean(data?.toc);
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
-      {showTopBar && data && (
-        <TopBar
-          fileName={data.name}
-          filePath={data.path}
-          mode={cliTheme}
-          onCycleTheme={cycleTheme}
-          live={true}
-          updatedAt={data.mtime}
-        />
-      )}
-
+    <div className="min-h-screen bg-background text-foreground">
       <div
         className={cn(
-          "mx-auto w-full px-5 py-8 sm:px-6 sm:py-12 flex justify-center gap-10 flex-1",
+          "mx-auto w-full px-5 py-10 sm:px-6 sm:py-14 flex justify-center gap-10",
           widthClass,
         )}
       >
