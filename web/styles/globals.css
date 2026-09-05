@@ -410,6 +410,36 @@ body {
   height: auto;
 }
 
+/* Mermaid modal */
+.mermaid-modal-canvas {
+  background-color: hsl(var(--background));
+  background-image: radial-gradient(hsl(var(--border) / 0.8) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.dark .mermaid-modal-canvas {
+  background-image: radial-gradient(hsl(var(--border) / 1) 1px, transparent 1px);
+}
+
+.mermaid-modal-svg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.mermaid-modal-svg svg {
+  display: block;
+  max-width: none !important;
+  height: auto;
+  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.08));
+}
+
+.dark .mermaid-modal-svg svg {
+  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.4));
+}
+
 /* Scrollbar subtle */
 ::-webkit-scrollbar {
   width: 10px;
