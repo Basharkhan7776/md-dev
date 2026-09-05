@@ -9,6 +9,10 @@ export type ServerOptions = {
   watch: boolean;
   theme: "light" | "dark" | "system";
   webRoot: string;
+  width?: "normal" | "wide" | "full";
+  toc?: boolean;
+  topbar?: boolean;
+  zoom?: boolean;
 };
 
 type SseClient = {
@@ -149,6 +153,10 @@ export function startServer(opts: ServerOptions) {
           markdown,
           mtime: st.mtimeMs,
           theme: opts.theme,
+          width: opts.width ?? "normal",
+          toc: opts.toc ?? false,
+          topbar: opts.topbar ?? true,
+          zoom: opts.zoom ?? true,
         });
       }
 

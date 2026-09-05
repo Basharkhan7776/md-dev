@@ -1,6 +1,6 @@
 {
   "name": "md-dev",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "CLI Markdown viewer — Vercel Geist theme, Mermaid, live reload on localhost",
   "type": "module",
   "bin": {

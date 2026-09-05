@@ -9,6 +9,7 @@ import { MermaidBlock } from "@/components/MermaidBlock";
 type Props = {
   markdown: string;
   isDark: boolean;
+  allowZoom?: boolean;
 };
 
 function isExternal(href: string) {
@@ -42,7 +43,7 @@ function extractText(node: React.ReactNode): string {
   return "";
 }
 
-export function MarkdownView({ markdown, isDark }: Props) {
+export function MarkdownView({ markdown, isDark, allowZoom = true }: Props) {
   const components: Components = {
     a({ href, children, ...props }) {
       const external = href ? isExternal(href) : false;
@@ -82,7 +83,7 @@ export function MarkdownView({ markdown, isDark }: Props) {
 
       const lang = match?.[1] ?? "text";
       if (lang === "mermaid") {
-        return <MermaidBlock chart={code} isDark={isDark} />;
+        return <MermaidBlock chart={code} isDark={isDark} allowZoom={allowZoom} />;
       }
       return <CodeBlock code={code} language={lang} isDark={isDark} />;
     },

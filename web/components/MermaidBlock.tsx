@@ -5,6 +5,7 @@ import { MermaidModal } from "@/components/MermaidModal";
 type Props = {
   chart: string;
   isDark: boolean;
+  allowZoom?: boolean;
 };
 
 let mermaidReady: Promise<typeof import("mermaid")> | null = null;
@@ -16,7 +17,7 @@ function loadMermaid() {
   return mermaidReady;
 }
 
-export function MermaidBlock({ chart, isDark }: Props) {
+export function MermaidBlock({ chart, isDark, allowZoom = true }: Props) {
   const id = useId().replace(/:/g, "");
   const containerRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string | null>(null);
@@ -71,6 +72,16 @@ export function MermaidBlock({ chart, isDark }: Props) {
       <div ref={containerRef} className="mermaid-wrap">
         <span className="text-sm text-muted-foreground">Rendering diagram…</span>
       </div>
+    );
+  }
+
+  if (!allowZoom) {
+    return (
+      <div
+        ref={containerRef}
+        className="mermaid-wrap"
+        dangerouslySetInnerHTML={{ __html: svg }}
+      />
     );
   }
 

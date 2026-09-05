@@ -6,7 +6,7 @@ import { openBrowser } from "./open";
 import { resolveMarkdownPath } from "./paths";
 import { findWebRoot, startServer } from "./server";
 
-const VERSION = "1.0.4";
+const VERSION = "1.0.5";
 
 /** Default port. Avoid 6000 — Chrome/Edge block it (ERR_UNSAFE_PORT / X11). */
 const DEFAULT_PORT = 5000;
@@ -22,7 +22,7 @@ const CHROME_UNSAFE_PORTS = new Set([
 ]);
 
 const HELP = `
-md-dev v${VERSION} — Markdown viewer (Geist theme · Mermaid)
+md-dev v${VERSION} — Markdown viewer (Geist theme · Mermaid · Live reload)
 
 Usage:
   md-dev [file] [options]
@@ -30,26 +30,37 @@ Usage:
 Arguments:
   file                 Markdown file to preview (default: README.md)
 
-Options:
+Theme Options:
+  -l, --light          Open in light mode
+  -d, --dark           Open in dark mode
+  --theme <theme>      Theme mode: light | dark | system (default: system)
+
+Layout Options:
+  -W, --wide           Wide layout (max-w-5xl, ideal for diagrams & tables)
+  --full               Full-width layout (max-w-7xl)
+  --toc                Show Table of Contents sidebar
+  --no-toc             Hide Table of Contents sidebar
+  --zen, --no-topbar   Zen mode: hide the top navigation header
+
+Diagram Options:
+  --no-zoom            Disable click-to-zoom dialog on Mermaid diagrams
+
+Server Options:
   -p, --port <n>       Port (default: ${DEFAULT_PORT})
   -H, --host <host>    Host (default: 127.0.0.1)
-  --theme <theme>      light | dark | system (default: system)
+  -o, --open           Open browser on start (default: true)
   --no-open            Do not open the browser
+  -w, --watch          Watch file for live reload (default: true)
   --no-watch           Disable live reload
   -h, --help           Show help
   -v, --version        Show version
 
 Examples:
   md-dev README.md
-  md-dev docs/guide.md -p 5173
-  md-dev ./notes.md --theme dark --no-open
-
-Install (global):
-  bun install -g md-dev
-  npm install -g md-dev   # still requires Bun on PATH
-
-Note:
-  Port 6000 is blocked by Chrome/Edge (ERR_UNSAFE_PORT). Default is ${DEFAULT_PORT}.
+  md-dev --light README.md
+  md-dev -d fixtures/sample.md
+  md-dev docs/guide.md -W --toc
+  md-dev notes.md -d -W --zen --no-open
 `.trim();
 
 function resolveDefaultFile(cwd: string): string | null {
@@ -83,7 +94,18 @@ async function main() {
         port: { type: "string", short: "p", default: String(DEFAULT_PORT) },
         host: { type: "string", short: "H", default: "127.0.0.1" },
         theme: { type: "string", default: "system" },
+        light: { type: "boolean", short: "l", default: false },
+        dark: { type: "boolean", short: "d", default: false },
+        wide: { type: "boolean", short: "W", default: false },
+        full: { type: "boolean", default: false },
+        toc: { type: "boolean", default: false },
+        "no-toc": { type: "boolean", default: false },
+        zen: { type: "boolean", default: false },
+        "no-topbar": { type: "boolean", default: false },
+        "no-zoom": { type: "boolean", default: false },
+        open: { type: "boolean", short: "o", default: false },
         "no-open": { type: "boolean", default: false },
+        watch: { type: "boolean", short: "w", default: false },
         "no-watch": { type: "boolean", default: false },
         help: { type: "boolean", short: "h", default: false },
         version: { type: "boolean", short: "v", default: false },
@@ -108,11 +130,38 @@ async function main() {
     process.exit(0);
   }
 
-  const theme = String(values.theme ?? "system");
-  if (!["light", "dark", "system"].includes(theme)) {
-    console.error(`Invalid --theme "${theme}". Use light, dark, or system.`);
+  if (values.light && values.dark) {
+    console.error("Error: Cannot specify both --light (-l) and --dark (-d).");
     process.exit(1);
   }
+
+  let theme: "light" | "dark" | "system" = "system";
+  if (values.light) {
+    theme = "light";
+  } else if (values.dark) {
+    theme = "dark";
+  } else if (values.theme) {
+    const t = String(values.theme).toLowerCase();
+    if (["light", "dark", "system"].includes(t)) {
+      theme = t as "light" | "dark" | "system";
+    } else {
+      console.error(`Invalid --theme "${values.theme}". Use light, dark, or system.`);
+      process.exit(1);
+    }
+  }
+
+  let width: "normal" | "wide" | "full" = "normal";
+  if (values.full) {
+    width = "full";
+  } else if (values.wide) {
+    width = "wide";
+  }
+
+  const toc = Boolean(values.toc && !values["no-toc"]);
+  const topbar = !(values.zen || values["no-topbar"]);
+  const zoom = !values["no-zoom"];
+  const shouldWatch = !values["no-watch"];
+  const shouldOpen = !values["no-open"];
 
   const port = Number(values.port);
   if (!Number.isInteger(port) || port < 1 || port > 65535) {
@@ -177,8 +226,12 @@ async function main() {
       file,
       host,
       port,
-      watch: !values["no-watch"],
-      theme: theme as "light" | "dark" | "system",
+      watch: shouldWatch,
+      theme,
+      width,
+      toc,
+      topbar,
+      zoom,
       webRoot,
     });
   } catch (err) {
@@ -201,12 +254,14 @@ async function main() {
   print("");
   print(`  ➜  Local:   ${url}`);
   print(`  ➜  Theme:   ${theme}`);
-  print(`  ➜  Watch:   ${values["no-watch"] ? "off" : "on"}`);
+  print(`  ➜  Layout:  ${width}${toc ? " · TOC" : ""}${!topbar ? " · Zen" : ""}`);
+  print(`  ➜  Watch:   ${shouldWatch ? "on" : "off"}`);
+  print(`  ➜  Zoom:    ${zoom ? "enabled" : "disabled"}`);
   print("");
   print("  Press Ctrl+C to stop");
   print("");
 
-  if (!values["no-open"]) {
+  if (shouldOpen) {
     await openBrowser(url);
   }
 

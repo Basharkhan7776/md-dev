@@ -26,9 +26,11 @@ bun link          # then: md-dev README.md
 
 ```bash
 md-dev README.md
-md-dev docs/guide.md -p 5173
-md-dev ./notes.md --theme dark
-md-dev .                 # README.md / index.md
+md-dev --light README.md         # Open directly in light mode
+md-dev --dark docs/guide.md      # Open directly in dark mode
+md-dev README.md -W --toc        # Wide layout with Table of Contents
+md-dev notes.md -d -W --zen      # Dark mode, wide view, zen mode (no header)
+md-dev .                         # README.md / index.md
 ```
 
 Opens **http://127.0.0.1:5000** by default.
@@ -36,16 +38,31 @@ Opens **http://127.0.0.1:5000** by default.
 ```
 md-dev [file] [options]
 
+Theme Options:
+  -l, --light          Open in light mode
+  -d, --dark           Open in dark mode
+  --theme <theme>      Theme mode: light | dark | system (default: system)
+
+Layout Options:
+  -W, --wide           Wide layout (max-w-5xl, ideal for diagrams & tables)
+  --full               Full-width layout (max-w-7xl)
+  --toc                Show Table of Contents sidebar
+  --no-toc             Hide Table of Contents sidebar
+  --zen, --no-topbar   Zen mode: hide the top navigation header
+
+Diagram Options:
+  --no-zoom            Disable click-to-zoom dialog on Mermaid diagrams
+
+Server Options:
   -p, --port <n>       Port (default: 5000)
   -H, --host <host>    Host (default: 127.0.0.1)
-  --theme <theme>      light | dark | system (default: system)
+  -o, --open           Open browser on start (default: true)
   --no-open            Do not open the browser
+  -w, --watch          Watch file for live reload (default: true)
   --no-watch           Disable live reload
-  -h, --help
-  -v, --version
+  -h, --help           Show help
+  -v, --version        Show version
 ```
-
-Theme follows the OS by default (`system`). Override with `--theme light` or `--theme dark` — there is no in-page toggle.
 
 > **Chrome:** port **6000** is blocked (`ERR_UNSAFE_PORT`). Default is **5000**.
 
@@ -53,13 +70,15 @@ Theme follows the OS by default (`system`). Override with `--theme light` or `--
 
 | Feature | Details |
 | --- | --- |
-| Local server | Bun.serve on port 5000 |
-| Minimal UI | Markdown only — no chrome bar / TOC / footer |
-| Geist code | Vercel-style token colors via Shiki |
-| GFM | Tables, task lists, strikethrough |
-| Mermaid | Fenced mermaid code blocks |
-| Images | Relative paths via `/media/*` |
-| Live reload | File watch + SSE |
+| Local server | Bun.serve on port 5000 with live reload |
+| Interactive Mermaid | Click diagram to open zoomable modal with pinch, +/- zoom, and hold-drag pan |
+| Themes | System, light (`--light`/`-l`), or dark (`--dark`/`-d`) with topbar toggle |
+| Layouts | Normal, wide (`--wide`/`-W`), full-width (`--full`), and Zen (`--zen`) |
+| Table of Contents | Optional sticky TOC sidebar (`--toc`) with active section highlighting |
+| Geist styling | Vercel Geist typography and token colors via Shiki |
+| GFM | Tables, task lists, strikethrough, autolinked headings |
+| Images | Relative paths served via `/media/*` |
+| Live reload | File watch + SSE instant refresh |
 
 ## CI/CD (GitHub Actions)
 
